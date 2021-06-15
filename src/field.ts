@@ -20,7 +20,7 @@ export class SudoQLField implements ISudoQLHashable {
     private readonly _field: string;
     private readonly _subFields: Map<string, SudoQLField>;
 
-    private _querier: any;
+    private _querier: FieldQuerier;
 
     private constructor(parent: ISudoQLHashable, field: string) {
 
@@ -34,10 +34,7 @@ export class SudoQLField implements ISudoQLHashable {
         return this._field;
     }
 
-    public async query(
-        query: SudoQLQuery,
-        controller: QueryController,
-    ): Promise<void> {
+    public async query(query: SudoQLQuery, controller: QueryController): Promise<void> {
 
         controller.migrateCache(this._hashConditions(query.conditions), {
             a: "test",
@@ -62,10 +59,7 @@ export class SudoQLField implements ISudoQLHashable {
         return `${this._parent.hash()}-${this._field}`;
     }
 
-    private async _querySubFields(
-        query: SudoQLQuery,
-        controller: QueryController,
-    ) {
+    private async _querySubFields(query: SudoQLQuery, controller: QueryController): Promise<any> {
 
         if (query.compound) {
 
@@ -86,7 +80,7 @@ export class SudoQLField implements ISudoQLHashable {
 
         if (this._querier) {
 
-            return this._querier();
+            return this._querier(query, controller);
         }
 
         throw new Error("No Querier");
