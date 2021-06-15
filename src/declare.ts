@@ -4,11 +4,11 @@
  * @description Declare
  */
 
-export interface ITestTestHashable {
+export interface ISudoQLHashable {
     hash(): string;
 }
 
-export type TestTestQueryQuantity =
+export type SudoQLQueryQuantity =
     {
         readonly plural: true;
     }
@@ -16,21 +16,21 @@ export type TestTestQueryQuantity =
         readonly plural?: false | undefined;
     };
 
-export type TestTestQueryType =
+export type SudoQLQueryType =
     {
         readonly compound: true;
-        readonly properties: Record<string, TestTestQuery>;
+        readonly properties: Record<string, SudoQLQuery>;
     }
     | {
         readonly compound?: false | undefined;
     };
 
-export type TestTestQuery =
+export type SudoQLQuery =
     {
         readonly field: string;
 
         readonly conditions?: Record<string, any>;
     }
-    & TestTestQueryQuantity
-    & TestTestQueryType;
+    & SudoQLQueryQuantity
+    & SudoQLQueryType;
 

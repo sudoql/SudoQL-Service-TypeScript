@@ -4,24 +4,24 @@
  * @description Field
  */
 
-import { ITestTestHashable, TestTestQuery } from "./declare";
+import { ISudoQLHashable, SudoQLQuery } from "./declare";
 import { QueryResult } from "./query/result";
 import { QueryStatus } from "./query/status";
 
-export class TestTestField implements ITestTestHashable {
+export class SudoQLField implements ISudoQLHashable {
 
-    public static fromRelative(parent: ITestTestHashable, field: string): TestTestField {
-        return new TestTestField(parent, field);
+    public static fromRelative(parent: ISudoQLHashable, field: string): SudoQLField {
+        return new SudoQLField(parent, field);
     }
 
-    private readonly _parent: ITestTestHashable;
+    private readonly _parent: ISudoQLHashable;
 
     private readonly _field: string;
-    private readonly _subFields: Map<string, TestTestField>;
+    private readonly _subFields: Map<string, SudoQLField>;
 
     private _querier: any;
 
-    private constructor(parent: ITestTestHashable, field: string) {
+    private constructor(parent: ISudoQLHashable, field: string) {
 
         this._parent = parent;
 
@@ -34,7 +34,7 @@ export class TestTestField implements ITestTestHashable {
     }
 
     public async query(
-        query: TestTestQuery,
+        query: SudoQLQuery,
         result: QueryResult,
         status: QueryStatus,
     ): Promise<void> {
@@ -51,7 +51,7 @@ export class TestTestField implements ITestTestHashable {
         return this;
     }
 
-    public defineSubField(field: TestTestField): this {
+    public defineSubField(field: SudoQLField): this {
 
         this._subFields.set(field.field, field);
         return this;
@@ -62,7 +62,7 @@ export class TestTestField implements ITestTestHashable {
     }
 
     private async _querySubFields(
-        query: TestTestQuery,
+        query: SudoQLQuery,
         result: QueryResult,
         status: QueryStatus,
     ) {
@@ -76,7 +76,7 @@ export class TestTestField implements ITestTestHashable {
 
                 if (this._subFields.has(property)) {
 
-                    const subField: TestTestField = this._subFields.get(property) as TestTestField;
+                    const subField: SudoQLField = this._subFields.get(property) as SudoQLField;
                     queryResult[property] = await subField.query(query.properties[property], result, status);
                 }
             }

@@ -4,32 +4,32 @@
  * @description Resolver
  */
 
-import { ITestTestHashable, TestTestQuery } from "./declare";
-import { TestTestField } from "./field";
+import { ISudoQLHashable, SudoQLQuery } from "./declare";
+import { SudoQLField } from "./field";
 
-export class TestTestResolver implements ITestTestHashable {
+export class SudoQLResolver implements ISudoQLHashable {
 
-    public static create(): TestTestResolver {
-        return new TestTestResolver();
+    public static create(): SudoQLResolver {
+        return new SudoQLResolver();
     }
 
-    private readonly _fields: Map<string, TestTestField>;
+    private readonly _fields: Map<string, SudoQLField>;
 
     private constructor() {
         this._fields = new Map();
     }
 
-    public createField(field: string): TestTestField {
-        const instance: TestTestField = TestTestField.fromRelative(this, field);
+    public createField(field: string): SudoQLField {
+        const instance: SudoQLField = SudoQLField.fromRelative(this, field);
 
         this._fields.set(field, instance);
         return instance;
     }
 
-    public async query(query: TestTestQuery): Promise<any> {
+    public async query(query: SudoQLQuery): Promise<any> {
         if (this._fields.has(query.field)) {
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            const field: TestTestField = this._fields.get(query.field) as TestTestField;
+            const field: SudoQLField = this._fields.get(query.field) as SudoQLField;
         }
     }
 
