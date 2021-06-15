@@ -5,24 +5,41 @@
  */
 
 import { QueryCache } from "./cache";
+import { QueryResult } from "./result";
 
 export class QueryController {
 
-    public static create(source: QueryCache): QueryController {
+    public static create(): QueryController {
 
-        return new QueryController(source);
+        return new QueryController(
+            QueryCache.create(),
+            QueryResult.create(),
+        );
     }
 
-    private readonly _source: QueryCache;
+    private readonly _cache: QueryCache;
+    private readonly _result: QueryResult;
 
-    private constructor(source: QueryCache) {
+    private constructor(
+        cache: QueryCache,
+        result: QueryResult,
+    ) {
 
-        this._source = source;
+        this._cache = cache;
+        this._result = result;
     }
 
     public migrateCache(key: string, value: Record<string, any>): this {
 
-        this._source.migrateCache(key, value);
+        this._cache.migrateCache(key, value);
         return this;
+    }
+
+    public clone(): QueryController {
+
+        return new QueryController(
+            this._cache,
+            this._result,
+        );
     }
 }
