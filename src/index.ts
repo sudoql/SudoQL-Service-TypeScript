@@ -7,8 +7,8 @@
 export * from "./declare";
 export * from "./field";
 export * from "./query/cache-source";
+export * from "./query/controller";
 export * from "./query/result";
-export * from "./query/status";
 export * from "./resolver";
 export * from "./type";
 

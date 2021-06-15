@@ -1,10 +1,10 @@
 /**
  * @author WMXPY
  * @namespace SudoQL_Query
- * @description Cache Source
+ * @description Cache
  */
 
-export class QueryCacheSource {
+export class QueryCache {
 
     public cache: Record<string, Record<string, any>> = {};
 

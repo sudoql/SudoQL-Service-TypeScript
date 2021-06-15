@@ -4,9 +4,8 @@
  * @description Field
  */
 
-import { ISudoQLHashable } from "./declare";
-import { QueryResult } from "./query/result";
-import { QueryStatus } from "./query/status";
+import { FieldQuerier, ISudoQLHashable } from "./declare";
+import { QueryController } from "./query/controller";
 import { SudoQLQuery } from "./type";
 
 export class SudoQLField implements ISudoQLHashable {
@@ -37,17 +36,16 @@ export class SudoQLField implements ISudoQLHashable {
 
     public async query(
         query: SudoQLQuery,
-        result: QueryResult,
-        status: QueryStatus,
+        controller: QueryController,
     ): Promise<void> {
 
-        status.migrateCache(this._hashConditions(query.conditions), {
+        controller.migrateCache(this._hashConditions(query.conditions), {
             a: "test",
             b: "test",
         });
     }
 
-    public defineQuerier(querier: (request: any) => Promise<any[]>): this {
+    public defineQuerier(querier: FieldQuerier): this {
 
         this._querier = querier;
         return this;
@@ -66,8 +64,7 @@ export class SudoQLField implements ISudoQLHashable {
 
     private async _querySubFields(
         query: SudoQLQuery,
-        result: QueryResult,
-        status: QueryStatus,
+        controller: QueryController,
     ) {
 
         if (query.compound) {
@@ -80,7 +77,7 @@ export class SudoQLField implements ISudoQLHashable {
                 if (this._subFields.has(property)) {
 
                     const subField: SudoQLField = this._subFields.get(property) as SudoQLField;
-                    queryResult[property] = await subField.query(query.properties[property], result, status);
+                    queryResult[property] = await subField.query(query.properties[property], controller);
                 }
             }
 
