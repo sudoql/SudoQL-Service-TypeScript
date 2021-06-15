@@ -4,13 +4,15 @@
  * @description Field
  */
 
-import { ISudoQLHashable, SudoQLQuery } from "./declare";
+import { ISudoQLHashable } from "./declare";
 import { QueryResult } from "./query/result";
 import { QueryStatus } from "./query/status";
+import { SudoQLQuery } from "./type";
 
 export class SudoQLField implements ISudoQLHashable {
 
     public static fromRelative(parent: ISudoQLHashable, field: string): SudoQLField {
+
         return new SudoQLField(parent, field);
     }
 
@@ -58,6 +60,7 @@ export class SudoQLField implements ISudoQLHashable {
     }
 
     public hash(): string {
+
         return `${this._parent.hash()}-${this._field}`;
     }
 
@@ -85,6 +88,7 @@ export class SudoQLField implements ISudoQLHashable {
         }
 
         if (this._querier) {
+
             return this._querier();
         }
 
@@ -92,6 +96,7 @@ export class SudoQLField implements ISudoQLHashable {
     }
 
     private _hashConditions(conditions: Record<string, any>): string {
+
         return `${this.hash()}:${JSON.stringify(conditions)}`;
     }
 }
