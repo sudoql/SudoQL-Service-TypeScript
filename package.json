@@ -1,6 +1,6 @@
 {
-	"name": "sudoql",
-	"version": "0.0.0",
+	"name": "@sudoql/service",
+	"version": "1.0.0",
 	"description": "TypeScript Implement of SudoQL Service",
 	"repository": {
 		"type": "git",
