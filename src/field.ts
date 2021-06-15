@@ -4,7 +4,7 @@
  * @description Field
  */
 
-import { FieldQuerier, ISudoQLHashable } from "./declare";
+import { FieldQuerier, FieldResolver, ISudoQLHashable } from "./declare";
 import { QueryController } from "./query/controller";
 import { SudoQLQuery } from "./type";
 
@@ -20,7 +20,8 @@ export class SudoQLField implements ISudoQLHashable {
     private readonly _field: string;
     private readonly _subFields: Map<string, SudoQLField>;
 
-    private _querier: FieldQuerier;
+    private _querier?: FieldQuerier;
+    private _resolver?: FieldResolver;
 
     private constructor(parent: ISudoQLHashable, field: string) {
 
@@ -45,6 +46,12 @@ export class SudoQLField implements ISudoQLHashable {
     public defineQuerier(querier: FieldQuerier): this {
 
         this._querier = querier;
+        return this;
+    }
+
+    public defineResolver(resolver: FieldResolver): this {
+
+        this._resolver = resolver;
         return this;
     }
 
