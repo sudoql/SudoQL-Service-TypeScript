@@ -79,7 +79,7 @@ export class SudoQLField<T extends any = any> implements ISudoQLHashable {
         if (this._resolver) {
             return this._resolver(query, controller);
         }
-        return;
+        return null as any;
     }
 
     private async _querySubFields(query: SudoQLQuery, controller: QueryController): Promise<T> {
