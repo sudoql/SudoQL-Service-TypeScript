@@ -4,7 +4,7 @@
  * @description Resolver
  */
 
-import { ISudoQLHashable, SudoQLResult } from "./declare";
+import { createSudoQLFailedResult, createSudoQLSucceedResult, ISudoQLHashable, SudoQLResult } from "./declare";
 import { SudoQLField } from "./field";
 import { QueryController } from "./query/controller";
 import { SudoQLQuery } from "./type";
@@ -35,12 +35,9 @@ export class SudoQLResolver implements ISudoQLHashable {
 
         if (!this._fields.has(query.field)) {
 
-            return {
-
-                succeed: false,
-                warnings: [],
+            createSudoQLFailedResult({
                 errors: [],
-            };
+            });
         }
 
         const field: SudoQLField = this._fields.get(query.field) as SudoQLField;
@@ -48,12 +45,7 @@ export class SudoQLResolver implements ISudoQLHashable {
         const controller: QueryController = QueryController.create();
         const queryResult: any = await field.query(query, controller);
 
-        return {
-
-            succeed: true,
-            data: queryResult,
-            warnings: [],
-        };
+        return createSudoQLSucceedResult(queryResult, {});
     }
 
     public formatStructure(): any {

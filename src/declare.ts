@@ -41,3 +41,36 @@ export type SudoQLResult = {
 
     readonly warnings: SudoQLWarning[];
 } & (SudoQLResultSucceed | SudoQLResultFailed);
+
+export type SudoQLResultCommonCreationOptions = {
+
+    readonly warnings?: SudoQLWarning[];
+};
+
+export type SudoQLResultSucceedCreationOptions = {
+} & SudoQLResultCommonCreationOptions;
+
+export const createSudoQLSucceedResult = (data: any, options: SudoQLResultSucceedCreationOptions): SudoQLResult => {
+
+    return {
+
+        succeed: true,
+        data,
+        warnings: options.warnings ?? [],
+    };
+};
+
+export type SudoQLResultFailedCreationOptions = {
+
+    readonly errors: SudoQLError[];
+} & SudoQLResultCommonCreationOptions;
+
+export const createSudoQLFailedResult = (options: SudoQLResultFailedCreationOptions): SudoQLResult => {
+
+    return {
+
+        succeed: false,
+        warnings: options.warnings ?? [],
+        errors: options.errors,
+    };
+};
