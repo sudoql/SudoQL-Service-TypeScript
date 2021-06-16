@@ -21,9 +21,12 @@ describe('Given (Person) Integrate Test', (): void => {
         const targetName: string = chance.name();
 
         const resolver: SudoQLResolver = SudoQLResolver.create();
-        const personField: SudoQLField<string> = resolver.createField('person');
+        const personField: SudoQLField<{
+            readonly name: string;
+        }> = resolver.createField('person');
 
-        personField.defineResolver((_query: SudoQLQuery, _controller: QueryController) => {
+        const nameSubField: SudoQLField<string> = personField.createSubField('name');
+        nameSubField.defineResolver((_query: SudoQLQuery, _controller: QueryController) => {
 
             return targetName;
         });

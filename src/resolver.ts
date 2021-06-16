@@ -35,7 +35,7 @@ export class SudoQLResolver implements ISudoQLHashable {
 
         if (!this._fields.has(query.field)) {
 
-            createSudoQLFailedResult({
+            return createSudoQLFailedResult({
                 errors: [],
             });
         }
