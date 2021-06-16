@@ -4,7 +4,7 @@
  * @description Resolver
  */
 
-import { ISudoQLHashable } from "./declare";
+import { ISudoQLHashable, SudoQLResult } from "./declare";
 import { SudoQLField } from "./field";
 import { QueryController } from "./query/controller";
 import { SudoQLQuery } from "./type";
@@ -31,28 +31,29 @@ export class SudoQLResolver implements ISudoQLHashable {
         return instance;
     }
 
-    public async query(query: SudoQLQuery): Promise<any> {
+    public async query(query: SudoQLQuery): Promise<SudoQLResult> {
 
         if (!this._fields.has(query.field)) {
 
-            throw new Error("QueryNotFound");
+            return {
+
+                succeed: false,
+                warnings: [],
+                errors: [],
+            };
         }
 
         const field: SudoQLField = this._fields.get(query.field) as SudoQLField;
 
         const controller: QueryController = QueryController.create();
-        return field.query(query, controller);
-    }
+        const queryResult: any = await field.query(query, controller);
 
-    public async queryAll(queries: SudoQLQuery[]): Promise<any> {
+        return {
 
-        const result: any[] = [];
-        for (const query of queries) {
-
-            const queryResult: any = await this.query(query);
-            result.push(queryResult);
-        }
-        return result;
+            succeed: true,
+            data: queryResult,
+            warnings: [],
+        };
     }
 
     public formatStructure(): any {

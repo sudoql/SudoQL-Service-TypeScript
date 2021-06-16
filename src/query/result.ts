@@ -4,6 +4,8 @@
  * @description Result
  */
 
+import { SudoQLError, SudoQLWarning } from "../declare";
+
 export class QueryResult {
 
     public static create(): QueryResult {
@@ -11,8 +13,8 @@ export class QueryResult {
         return new QueryResult();
     }
 
-    private readonly _warnings: any[];
-    private readonly _errors: any[];
+    private readonly _warnings: SudoQLWarning[];
+    private readonly _errors: SudoQLError[];
 
     private constructor() {
 
@@ -20,11 +22,23 @@ export class QueryResult {
         this._errors = [];
     }
 
-    public get warnings(): any[] {
+    public get warnings(): SudoQLWarning[] {
         return this._warnings;
     }
 
-    public get errors(): any[] {
+    public get errors(): SudoQLError[] {
         return this._errors;
+    }
+
+    public appendWarning(warning: SudoQLWarning): this {
+
+        this._warnings.push(warning);
+        return this;
+    }
+
+    public appendErrors(error: SudoQLError): this {
+
+        this._errors.push(error);
+        return this;
     }
 }

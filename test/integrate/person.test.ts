@@ -32,6 +32,11 @@ describe('Given (Person) Integrate Test', (): void => {
             field: 'name',
         });
 
-        expect(result).to.be.equal(targetName);
+        expect(result).to.be.deep.equal({
+
+            succeed: true,
+            data: targetName,
+            warnings: [],
+        });
     });
 });
