@@ -86,7 +86,7 @@ export class SudoQLField<T extends any = any> implements ISudoQLHashable {
 
         if (query.compound) {
 
-            const queryResult: Record<string, any> = {};
+            const queryResult: Map<string, any> = new Map();
 
             for (const property of query.properties) {
 
@@ -94,11 +94,13 @@ export class SudoQLField<T extends any = any> implements ISudoQLHashable {
                 if (this._subFields.has(fieldName)) {
 
                     const subField: SudoQLField = this._subFields.get(fieldName) as SudoQLField;
-                    queryResult[fieldName] = await subField.query(query.properties[fieldName], controller);
+
+                    const fieldResult: any = await subField.query(property, controller);
+                    queryResult.set(fieldName, fieldResult);
                 }
             }
 
-            return queryResult as unknown as T;
+            return Object.fromEntries(queryResult) as unknown as T;
         }
         return this._executeResolver(query, controller);
     }
