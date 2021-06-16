@@ -13,4 +13,4 @@ export interface ISudoQLHashable {
 }
 
 export type FieldQuerier = (query: SudoQLQuery, controller: QueryController) => Promise<any>;
-export type FieldResolver = (query: SudoQLQuery, controller: QueryController) => any;
+export type FieldResolver<T> = (query: SudoQLQuery, controller: QueryController) => T;

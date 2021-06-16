@@ -8,11 +8,11 @@ import { FieldQuerier, FieldResolver, ISudoQLHashable } from "./declare";
 import { QueryController } from "./query/controller";
 import { SudoQLQuery } from "./type";
 
-export class SudoQLField implements ISudoQLHashable {
+export class SudoQLField<T extends any = any> implements ISudoQLHashable {
 
-    public static fromRelative(parent: ISudoQLHashable, field: string): SudoQLField {
+    public static fromRelative<T extends any = any>(parent: ISudoQLHashable, field: string): SudoQLField<T> {
 
-        return new SudoQLField(parent, field);
+        return new SudoQLField<T>(parent, field);
     }
 
     private readonly _parent: ISudoQLHashable;
@@ -21,7 +21,7 @@ export class SudoQLField implements ISudoQLHashable {
     private readonly _subFields: Map<string, SudoQLField>;
 
     private _querier?: FieldQuerier;
-    private _resolver?: FieldResolver;
+    private _resolver?: FieldResolver<T>;
 
     private constructor(parent: ISudoQLHashable, field: string) {
 
@@ -35,30 +35,30 @@ export class SudoQLField implements ISudoQLHashable {
         return this._field;
     }
 
-    public async query(query: SudoQLQuery, controller: QueryController): Promise<void> {
-
-        controller.migrateCache(this._hashConditions(query.conditions), {
-            a: "test",
-            b: "test",
-        });
-    }
-
     public defineQuerier(querier: FieldQuerier): this {
 
         this._querier = querier;
         return this;
     }
 
-    public defineResolver(resolver: FieldResolver): this {
+    public defineResolver(resolver: FieldResolver<T>): this {
 
         this._resolver = resolver;
         return this;
     }
 
-    public defineSubField(field: SudoQLField): this {
+    public createSubField<SubT extends any = any>(field: string): SudoQLField<SubT> {
 
-        this._subFields.set(field.field, field);
-        return this;
+        const instance: SudoQLField<SubT> = SudoQLField.fromRelative<SubT>(this, field);
+
+        this._subFields.set(field, instance);
+        return instance;
+    }
+
+    public async query(query: SudoQLQuery, controller: QueryController): Promise<T> {
+
+        await this._executeQuerier(query, controller);
+        return await this._querySubFields(query, controller);
     }
 
     public hash(): string {
@@ -66,13 +66,29 @@ export class SudoQLField implements ISudoQLHashable {
         return `${this._parent.hash()}-${this._field}`;
     }
 
-    private async _querySubFields(query: SudoQLQuery, controller: QueryController): Promise<any> {
+    private async _executeQuerier(query: SudoQLQuery, controller: QueryController): Promise<void> {
+
+        if (this._querier) {
+            await this._querier(query, controller);
+        }
+        return;
+    }
+
+    private _executeResolver(query: SudoQLQuery, controller: QueryController): T {
+
+        if (this._resolver) {
+            return this._resolver(query, controller);
+        }
+        return;
+    }
+
+    private async _querySubFields(query: SudoQLQuery, controller: QueryController): Promise<T> {
 
         if (query.compound) {
 
             const queryResult: Record<string, any> = {};
-
             const propertyKeys: string[] = Object.keys(query.properties);
+
             for (const property of propertyKeys) {
 
                 if (this._subFields.has(property)) {
@@ -82,19 +98,8 @@ export class SudoQLField implements ISudoQLHashable {
                 }
             }
 
-            return queryResult;
+            return queryResult as unknown as T;
         }
-
-        if (this._querier) {
-
-            return this._querier(query, controller);
-        }
-
-        throw new Error("No Querier");
-    }
-
-    private _hashConditions(conditions: Record<string, any>): string {
-
-        return `${this.hash()}:${JSON.stringify(conditions)}`;
+        return this._executeResolver(query, controller);
     }
 }

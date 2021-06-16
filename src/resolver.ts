@@ -6,6 +6,7 @@
 
 import { ISudoQLHashable } from "./declare";
 import { SudoQLField } from "./field";
+import { QueryController } from "./query/controller";
 import { SudoQLQuery } from "./type";
 
 export class SudoQLResolver implements ISudoQLHashable {
@@ -32,11 +33,26 @@ export class SudoQLResolver implements ISudoQLHashable {
 
     public async query(query: SudoQLQuery): Promise<any> {
 
-        if (this._fields.has(query.field)) {
+        if (!this._fields.has(query.field)) {
 
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            const field: SudoQLField = this._fields.get(query.field) as SudoQLField;
+            throw new Error("QueryNotFound");
         }
+
+        const field: SudoQLField = this._fields.get(query.field) as SudoQLField;
+
+        const controller: QueryController = QueryController.create();
+        return field.query(query, controller);
+    }
+
+    public async queryAll(queries: SudoQLQuery[]): Promise<any> {
+
+        const result: any[] = [];
+        for (const query of queries) {
+
+            const queryResult: any = await this.query(query);
+            result.push(queryResult);
+        }
+        return result;
     }
 
     public formatStructure(): any {
