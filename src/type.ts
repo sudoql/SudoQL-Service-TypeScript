@@ -15,7 +15,7 @@ export type SudoQLQueryQuantity =
 export type SudoQLQueryType =
     {
         readonly compound: true;
-        readonly properties: Record<string, SudoQLQuery>;
+        readonly properties: SudoQLQuery[];
     }
     | {
         readonly compound?: false | undefined;

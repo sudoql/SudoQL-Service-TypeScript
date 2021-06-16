@@ -34,11 +34,9 @@ describe('Given (Person) Integrate Test', (): void => {
         const result = await resolver.query({
             field: 'person',
             compound: true,
-            properties: {
-                name: {
-                    field: 'name',
-                },
-            },
+            properties: [{
+                field: 'name',
+            }],
         });
 
         expect(result).to.be.deep.equal({
