@@ -14,7 +14,7 @@
 	"homepage": "https://github.com/sudoql/SudoQL-Service-TypeScript#readme",
 	"devDependencies": {
 		"@sudoo/io": "^1.8.0",
-		"@sudoo/triforce": "^2.16.1"
+		"@sudoo/triforce": "^2.16.2"
 	},
 	"nyc": {
 		"extension": [
