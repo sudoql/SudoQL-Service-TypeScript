@@ -6,26 +6,36 @@
 
 import { TSudoQLRequest, TSudoQLResponse } from "../declare";
 import { SudoQLField } from "../field/field";
+import { ISudoQLField } from "../field/interface";
 import { ISudoQLService } from "./interface";
 
 export class SudoQLService<Authentication = any> implements ISudoQLService<Authentication> {
 
-    public static create<Authentication = any>(): SudoQLService<Authentication> {
+    public static create<Authentication = any>(serviceName: string): SudoQLService<Authentication> {
 
-        return new SudoQLService<Authentication>();
+        return new SudoQLService<Authentication>(serviceName);
     }
 
-    private readonly fields: Map<string, SudoQLField<Authentication>>;
+    private readonly _serviceName: string;
 
-    private constructor() {
+    private readonly _fields: Map<string, SudoQLField<Authentication>>;
 
-        this.fields = new Map<string, SudoQLField<Authentication>>();
+    private constructor(serviceName: string) {
+
+        this._serviceName = serviceName;
+
+        this._fields = new Map<string, SudoQLField<Authentication>>();
     }
 
-    public createAndAttachField(fieldName: string): SudoQLField<Authentication> {
+    public get serviceName(): string {
+        return this._serviceName;
+    }
+
+    public createAndAttachField(fieldName: string): ISudoQLField<Authentication> {
 
         const field: SudoQLField<Authentication> = SudoQLField.create(fieldName, this);
-        this.fields.set(fieldName, field);
+
+        this._fields.set(fieldName, field);
 
         return field;
     }
