@@ -4,22 +4,37 @@
  * @description Service
  */
 
-export class SudoQLService {
+import { TSudoQLRequest, TSudoQLResponse } from "./declare";
+import { SudoQLField } from "./field";
 
-    public static create(): SudoQLService {
+export class SudoQLService<Authentication = any> {
 
-        return new SudoQLService();
+    public static create<Authentication = any>(): SudoQLService<Authentication> {
+
+        return new SudoQLService<Authentication>();
     }
 
-    private readonly namespaces: any;
+    private readonly fields: Map<string, SudoQLField<Authentication>>;
 
     private constructor() {
 
-        this.namespaces = null;
+        this.fields = new Map<string, SudoQLField<Authentication>>();
     }
 
-    public createField() {
+    public createAndAttachField(fieldName: string): SudoQLField<Authentication> {
 
-        return;
+        const field: SudoQLField<Authentication> = SudoQLField.create(fieldName);
+        this.fields.set(fieldName, field);
+
+        return field;
+    }
+
+    public async query<Data = any>(request: TSudoQLRequest<Authentication>): Promise<TSudoQLResponse<Data>> {
+
+        return {
+
+            succeed: true,
+            data: null,
+        };
     }
 }

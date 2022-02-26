@@ -4,12 +4,27 @@
  * @description Declare
  */
 
-export interface ISudoQLQuery {
+export type TSudoQLQuery = {
 
     readonly name: string;
 };
 
-export interface ISudoQLRequest {
+export type TSudoQLRequest<Authentication> = {
 
-    readonly queries: ISudoQLQuery[];
-}
+    readonly authentication: Authentication;
+    readonly queries: TSudoQLQuery[];
+};
+
+type TSucceedResponse<Data> = {
+
+    readonly succeed: true;
+    readonly data: Data;
+};
+
+type TFailedResponse = {
+
+    readonly succeed: false;
+};
+
+export type TSudoQLResponse<Data> = {
+} & (TSucceedResponse<Data> | TFailedResponse);
