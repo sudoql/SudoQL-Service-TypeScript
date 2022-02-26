@@ -6,6 +6,8 @@
 
 export type TSudoQLQuery = {
 
+    readonly key: string;
+
     readonly fieldName: string;
 };
 
