@@ -5,6 +5,8 @@
  */
 
 export * from "./declare";
-export * from "./field";
-export * from "./service";
+export * from "./field/field";
+export * from "./field/interface";
+export * from "./service/interface";
+export * from "./service/service";
 

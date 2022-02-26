@@ -6,7 +6,7 @@
 
 export type TSudoQLQuery = {
 
-    readonly name: string;
+    readonly fieldName: string;
 };
 
 export type TSudoQLRequest<Authentication> = {

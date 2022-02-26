@@ -1,13 +1,14 @@
 /**
  * @author WMXPY
- * @namespace SudoQL
+ * @namespace SudoQL_Service
  * @description Service
  */
 
-import { TSudoQLRequest, TSudoQLResponse } from "./declare";
-import { SudoQLField } from "./field";
+import { TSudoQLRequest, TSudoQLResponse } from "../declare";
+import { SudoQLField } from "../field/field";
+import { ISudoQLService } from "./interface";
 
-export class SudoQLService<Authentication = any> {
+export class SudoQLService<Authentication = any> implements ISudoQLService<Authentication> {
 
     public static create<Authentication = any>(): SudoQLService<Authentication> {
 
@@ -23,7 +24,7 @@ export class SudoQLService<Authentication = any> {
 
     public createAndAttachField(fieldName: string): SudoQLField<Authentication> {
 
-        const field: SudoQLField<Authentication> = SudoQLField.create(fieldName);
+        const field: SudoQLField<Authentication> = SudoQLField.create(fieldName, this);
         this.fields.set(fieldName, field);
 
         return field;
